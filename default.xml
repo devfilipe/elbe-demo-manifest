@@ -11,8 +11,11 @@
         <!-- Lightweight web UI for ELBE -->
         <project name="elbe-ui" path="tools/elbe-ui" />
 
-        <!-- Custom APT repository tooling -->
+        <!-- Custom APT repository tooling (pool layout, SBOM-compatible) -->
         <project name="elbe-demo-apt-repository" path="tools/elbe-demo-apt-repository" />
+
+        <!-- Custom APT repository tooling (flat layout) -->
+        <project name="elbe-demo-apt-repository-flat" path="tools/elbe-demo-apt-repository-flat" />
 
         <!-- Sample hello application source -->
         <project name="elbe-demo-app-hello" path="sources/elbe-demo-app-hello" />
