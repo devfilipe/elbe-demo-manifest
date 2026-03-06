@@ -22,30 +22,56 @@ chmod a+rx ~/.bin/repo
 Add the `PATH` export to your shell profile (`~/.bashrc`, `~/.zshrc`, etc.) to
 make it permanent.
 
+### SSH alias (required)
+
+The manifest fetches all repositories via SSH using the host alias
+`github.com-devfilipe`. This alias must be configured in `~/.ssh/config`
+with the exact name shown below. Set `IdentityFile` to the SSH private key
+you normally use with GitHub (e.g. `~/.ssh/id_ed25519` or `~/.ssh/id_rsa`):
+
+```
+Host github.com-devfilipe
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/<your-github-key>
+```
+
+If you have not set up an SSH key for GitHub yet, follow the
+[GitHub SSH key guide](https://docs.github.com/en/authentication/connecting-to-your-github-account/adding-a-new-ssh-key-to-your-github-account)
+first.
+
+Verify the alias resolves correctly before running `repo sync`:
+
+```bash
+ssh -T git@github.com-devfilipe
+# Expected: Hi <your-username>! You've successfully authenticated...
+```
+
 ## Quick start
 
 ```bash
 TOPLEVEL=/path/to/your/workspace
 mkdir -p "$TOPLEVEL" && cd "$TOPLEVEL"
-repo init -u https://github.com/devfilipe/elbe-demo-manifest.git -b 0.1.0
+repo init -u git@github.com-devfilipe:devfilipe/elbe-demo-manifest.git
 repo sync
+repo start main --all   # create local tracking branches on all projects
 ```
 
 After `repo sync` the workspace will be populated as follows:
 
 ```
 $TOPLEVEL/
-├── elbe-demo-manifest/          # this repository
 ├── tools/
-│   ├── elbe-devcontainers/      # Docker dev environment (ELBE + QEMU)
-│   ├── elbe-ui/                 # Web UI for managing builds
-│   └── elbe-demo-apt-repository/# Local flat APT repository tooling
+│   ├── elbe-devcontainers/           # Docker dev environment (ELBE + QEMU)
+│   ├── elbe-ui/                      # Web UI for managing builds
+│   ├── elbe-demo-apt-repository/     # Local APT repo — pool layout (SBOM-compatible)
+│   └── elbe-demo-apt-repository-flat/# Local APT repo — flat layout
 ├── sources/
-│   └── elbe-demo-app-hello/     # Sample C application source
+│   └── elbe-demo-app-hello/          # Sample C application source
 ├── packages/
-│   └── elbe-demo-pkg-hello/     # Debian packaging for the hello app
+│   └── elbe-demo-pkg-hello/          # Debian packaging for the hello app
 └── projects/
-    └── elbe-demo-projects/      # ELBE XML image definitions
+    └── elbe-demo-projects/           # ELBE XML image definitions
 ```
 
 ## Repository index
@@ -54,7 +80,8 @@ $TOPLEVEL/
 |---|---|---|
 | [elbe-devcontainers](https://github.com/devfilipe/elbe-devcontainers) | `tools/elbe-devcontainers` | Docker environment with ELBE, QEMU, and Debian packaging tools |
 | [elbe-ui](https://github.com/devfilipe/elbe-ui) | `tools/elbe-ui` | Web UI for managing the ELBE initvm and build pipeline |
-| [elbe-demo-apt-repository](https://github.com/devfilipe/elbe-demo-apt-repository) | `tools/elbe-demo-apt-repository` | Local flat APT repository for custom packages |
+| [elbe-demo-apt-repository](https://github.com/devfilipe/elbe-demo-apt-repository) | `tools/elbe-demo-apt-repository` | Local APT repository — pool layout, required for SBOM generation |
+| [elbe-demo-apt-repository-flat](https://github.com/devfilipe/elbe-demo-apt-repository-flat) | `tools/elbe-demo-apt-repository-flat` | Local APT repository — flat layout, simpler setup without SBOM support |
 | [elbe-demo-app-hello](https://github.com/devfilipe/elbe-demo-app-hello) | `sources/elbe-demo-app-hello` | Sample C application source code |
 | [elbe-demo-pkg-hello](https://github.com/devfilipe/elbe-demo-pkg-hello) | `packages/elbe-demo-pkg-hello` | Debian package definition for the hello application |
 | [elbe-demo-projects](https://github.com/devfilipe/elbe-demo-projects) | `projects/elbe-demo-projects` | ELBE XML files describing the target images to build |

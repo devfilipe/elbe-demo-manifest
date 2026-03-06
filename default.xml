@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
 
-        <remote name="devfilipe" fetch="https://github.com/devfilipe/" />
+        <remote name="devfilipe" fetch="git@github.com-devfilipe:devfilipe/" />
 
         <default remote="devfilipe" revision="main" sync-j="4" />
 
